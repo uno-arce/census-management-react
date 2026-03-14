@@ -1,0 +1,2 @@
+# App Context
+This app is a web application version of our Census Management System Management project from our course subject - Software Engineering II. From a standalone Java Program, I re-developed it as a web application that has similar key functionalities plus new features with enhanced user interface, experience and accessibility.
