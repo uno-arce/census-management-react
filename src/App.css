@@ -1,8 +1,183 @@
-@import "tailwindcss"
+@import url('https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300..900;1,300..900&family=Gabarito:wght@400..900&display=swap');
+@import "tailwindcss";
 
-#root {
-  max-width: 1920px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+@theme {
+  --font-display: "Gabarito", sans-serif;
+  --font-body: "Figtree", sans-serif;
+
+  --color-base: #212529;
+  --color-base-light: #6D6D6D;
+  --color-accent: #007133;
+  --color-accent-light: #A0A0A0;
+  --color-interactive: #004828;
+  --color-button: #0C65E8;
+  --color-button-hover: #004EBD;
+  --color-background: #F8F9FA;
+  --color-background-body: #E9ECEF;
+  --color-surface: #FFFFFF;
+  --color-component-surface: #FFFFFF;
 }
+
+@layer base {
+  .dark {
+    --color-base: #F8F9FA;
+    --color-base-light: #ADB5BD;
+    --color-accent: #00A34A;
+    --color-accent-light: #495057;
+    --color-interactive: #007133;
+    --color-button: #3D8BFF;
+    --color-background: #121212;
+    --color-background-body: #1E1E1E;
+    --color-surface: #2C2C2C;
+    --color-component-surface: #383838;
+  }
+
+  body {
+    font-family: var(--font-body);
+    font-size: var(--text-lg);
+    color: var(--color-base);
+    background-color: var(--color-background-body);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    min-height: 100vh;
+  }
+
+  #root {
+    width: 100%;
+    max-width: 1920px;
+    padding: 0;
+    background-color: var(--color-background);
+    background-image: var(--background-main)
+  }
+
+  a {
+    color: var(--color-accent);
+
+    &:hover {
+      color: var(--color-interactive);
+    }
+  }
+
+  h1 {
+    color: var(--color-accent);
+    font-size: var(--text-6xl);
+    line-height: var(--leading-tight);
+    text-wrap: wrap;
+  }
+
+  h2 {
+    color: var(--color-base);
+    font-family: var(--font-display);
+    font-size: var(--text-3xl);
+  }
+
+  h3 {
+    color: var(--color-base);
+    font-size: var(--text-sm);
+  }
+
+  button {
+    font-size: var(--text-normal);
+    color: var(--color-base-light);
+
+    &:hover {
+      color: var(--color-accent);
+    }
+
+    &:focus {
+      color: var(--color-accent);
+    }
+  }
+
+  img {
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    display: block;
+    max-width: 100%;
+  }
+
+  label {
+    font-size: var(--text-sm);
+    font-weight: bold;
+  }
+
+  span {
+    display: inline-block;
+    gap: 0.5rem;
+    color: var(--color-accent-light);
+  }
+
+  span svg {
+    display: inline-block;
+    vertical-align: middle;
+    position: relative;
+    top: -5px;
+  }
+
+}
+
+@layer components {
+  .button {
+    display: flex;
+    justify-items: center;
+    align-items: center;
+    cursor: pointer;
+  }
+
+  .button-primary {
+    font-size: 14px;
+    color: var(--color-white);
+    background-color: var(--color-button);
+    border-radius: 6px;
+    padding: 4px 6px 4px 6px;
+
+    &:hover, &:focus {
+      background-color: var(--color-button-hover);
+    }
+  }
+
+  .button-secondary {
+    font-size: var(--text-sm);
+    color: var(--color-white);
+    background-color: var(--color-button);
+    border: 1px solid var(--color-base-light);
+    border-radius: 3px;
+    padding: 4px 6px 4px 6px;
+
+    &:hover, &:focus {
+      background-color: var(--color-button-hover);
+    }
+  }
+
+  .button-tertiary {
+    color: var(--color-white);
+    background-color: var(--color-button);
+    height: 24px;
+    width: 24px;
+
+    &:hover, &:focus {
+      background-color: var(--color-button-hover);
+    }
+  }
+
+  .collection-item-active {
+    box-shadow: 0 0 20px 5px var(--color-interactive);
+  }
+
+  .input {
+    border: 1px solid var(--color-accent-light);
+    border-radius: 3px;
+    padding: 8px 0 8px 8px;
+    font-size: 16px;
+
+    &:focus {
+      outline: none;
+      border: 1px solid var(--color-base);
+    }
+  }
+}
+
