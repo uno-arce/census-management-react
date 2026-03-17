@@ -50,7 +50,7 @@
     width: 100%;
     max-width: 1920px;
     padding: 0;
-    background-color: var(--color-background);
+    background-color: var(--color-background-body);
     background-image: var(--background-main)
   }
 
@@ -108,6 +108,7 @@
   span {
     display: inline-block;
     gap: 0.5rem;
+    font-family: var(--font-display);
     color: var(--color-accent-light);
   }
 
@@ -118,6 +119,33 @@
     top: -5px;
   }
 
+  table {
+      @apply w-full border-collapse text-left;
+    }
+
+    thead tr {
+      @apply bg-background text-[11px] uppercase tracking-wider text-base-light border-b border-base-light/20;
+    }
+
+    th {
+      @apply p-4 font-bold;
+    }
+
+    td {
+      @apply p-4 text-sm border-b border-base-light/5 transition-colors;
+    }
+
+    tbody tr:nth-child(even) {
+      @apply bg-base-light/5;
+    }
+
+    tbody tr:hover {
+      @apply bg-accent/5 cursor-pointer;
+    }
+
+    td.whitespace-nowrap {
+      @apply whitespace-nowrap;
+    }
 }
 
 @layer components {
@@ -164,8 +192,15 @@
     }
   }
 
-  .collection-item-active {
-    box-shadow: 0 0 20px 5px var(--color-interactive);
+  .button-accent {
+    @apply flex items-center p-3 rounded-md border border-base-light/20 text-sm font-medium transition-all;
+    background-color: var(--color-component-surface);
+    color: var(--color-base);
+
+    &:hover {
+      background-color: var(--color-background);
+      border-color: var(--color-accent);
+    }
   }
 
   .input {
