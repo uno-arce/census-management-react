@@ -78,6 +78,7 @@ const useAuth = () => {
 
 	const logout = () => {
         localStorage.removeItem('token')
+        localStorage.removeItem('census-storage')
         actionsUserAuth.setIsAuthenticated(false)
         navigate('/login', { replace: true })
     }
