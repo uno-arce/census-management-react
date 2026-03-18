@@ -9,6 +9,13 @@ const useCensus = () => {
     const actionsAlert = useAlertActions()
     const debounceTimer = useRef(null)
 
+    const fetchTotalRecords = useCallback(async () => {
+        const response = await censusRecord.getTotalRecords()
+        if (response?.status === 200) {
+            actions.setTotalRecords(response.data.total)
+        }
+    }, [actions])
+
     const fetchRecords = useCallback(async () => {
         const params = {
             rows: data.rowsPerPage,
@@ -57,8 +64,15 @@ const useCensus = () => {
             actionsAlert.setAlertStatus('success')
             actionsAlert.setAlertMessage('Deleted successfully')
             fetchRecords()
+            fetchTotalRecords()
         }
     }
+
+    useEffect(() => {
+        if (data.totalRecords === 0) {
+            fetchTotalRecords()
+        }
+    }, [])
 
     useEffect(() => {
             if (debounceTimer.current) clearTimeout(debounceTimer.current)
