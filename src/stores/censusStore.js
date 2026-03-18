@@ -18,21 +18,29 @@ const useCensusStore = create(
                 setRecords: (records) => set({ records }),
                 setTotalRecords: (total) => set({ totalRecords: total }),
                 setCurrentPage: (page) => set({ currentPage: page }),
+                setRowsPerPage: (rows) => set({ rowsPerPage: rows }),
                 setSearchQuery: (query) => set({ searchQuery: query }),
+                setSearchColumn: (column) => set({ searchColumn: column }), 
                 setSort: (column, order) => set({ sortColumn: column, sortOrder: order }),
-                resetCensusState: () => set({ records: [], currentPage: 1, searchQuery: '' })
+                resetCensusState: () => set({ 
+                    records: [], 
+                    currentPage: 1, 
+                    searchQuery: '', 
+                    rowsPerPage: 15 
+                })
             }
         }),
         {
             name: 'census-storage',
             storage: createJSONStorage(() => localStorage),
             partialize: (state) => ({ 
-                records: state.records,
                 totalRecords: state.totalRecords,
                 currentPage: state.currentPage,
                 searchQuery: state.searchQuery,
+                searchColumn: state.searchColumn,
                 sortColumn: state.sortColumn,
-                sortOrder: state.sortOrder
+                sortOrder: state.sortOrder,
+                rowsPerPage: state.rowsPerPage
             }),
         }
     )
@@ -40,7 +48,7 @@ const useCensusStore = create(
 
 export const useCensusData = () => useCensusStore(useShallow((state) => ({
     records: state.records,
-    totalRecords: state.records.length,
+    totalRecords: state.totalRecords,
     rowsPerPage: state.rowsPerPage,
     currentPage: state.currentPage,
     searchQuery: state.searchQuery,
