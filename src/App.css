@@ -123,6 +123,10 @@
       @apply w-full border-collapse text-left;
     }
 
+    thead {
+      @apply sticky top-0 z-10
+    }
+
     thead tr {
       @apply bg-background text-[11px] uppercase tracking-wider text-base-light border-b border-base-light/20;
     }
