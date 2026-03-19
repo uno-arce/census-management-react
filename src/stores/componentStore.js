@@ -14,15 +14,17 @@ const useComponentStore = create((set) => ({
 
 	// Collection
 	collectionItem: null,
-	collectionSelectedGroup: 1,
-	collectionSelectedIndex: 0,
-	isCollectionOpen: false,
-	actionsCollection: {
-		setCollectionItem: (collectionItem) => set({ collectionItem: collectionItem }),
-		setCollectionSelectedGroup: (selectedGroup) => set({collectionSelectedGroup: selectedGroup}),
-		setCollectionSelectedIndex: (selectedIndex) => set({ collectionSelectedIndex: selectedIndex}),
-		setIsCollectionOpen: (isOpen) => set({ isCollectionOpen: isOpen }),
-	},
+    collectionSelectedGroup: 1,
+    collectionSelectedIndex: 0,
+    isCollectionOpen: false,
+    selectedIds: [],
+    actionsCollection: {
+        setCollectionItem: (collectionItem) => set({ collectionItem: collectionItem }),
+        setCollectionSelectedGroup: (selectedGroup) => set({collectionSelectedGroup: selectedGroup}),
+        setCollectionSelectedIndex: (selectedIndex) => set({ collectionSelectedIndex: selectedIndex }),
+        setIsCollectionOpen: (isOpen) => set({ isCollectionOpen: isOpen }),
+        setSelectedIds: (ids) => set({ selectedIds: ids }),
+    },
 
 	// Form
 	currentFormStep: 'Username',
@@ -34,6 +36,30 @@ const useComponentStore = create((set) => ({
 	isSidebarOpen: false,
 	actionsSidebar: {
 		setIsSidebarOpen: (isOpen) => set({ isSidebarOpen: isOpen }),
+	},
+
+	// Modal
+	isModalOpen: false,
+	modalConfig: {
+		title: '',
+		description: '',
+		variant: 'primary',
+		confirmText: 'Confirm',
+		onConfirm: () => {},
+	},
+	actionsModal: {
+		setIsModalOpen: (isOpen) => set({ isModalOpen: isOpen }),
+		setModalConfig: (config) => set((state) => ({ 
+			modalConfig: { ...state.modalConfig, ...config } 
+		})),
+	},
+
+	// Menu
+	selectedMenuCategory: null,
+	selectedMenuLabel: null,
+	actionsMenu: {
+		setSelectedMenuCategory: (category) => set({ selectedMenuCategory: category }),
+		setSelectedMenuLabel: (label) => set({ selectedMenuLabel: label }),
 	},
 
 	// ThemeToggle
@@ -69,6 +95,7 @@ export const useCollectionData = () => useComponentStore(useShallow((state) => (
 	collectionItem: state.collectionItem,
 	collectionSelectedGroup: state.collectionSelectedGroup,
 	collectionSelectedIndex: state.collectionSelectedIndex,
+	selectedIds: state.selectedIds || [],
 	isCollectionOpen: state.isCollectionOpen
 })))
 export const useCollectionActions = () => useComponentStore((state) => state.actionsCollection)
@@ -78,6 +105,13 @@ export const useFormData = () => useComponentStore(useShallow((state) => ({
 	currentFormStep: state.currentFormStep
 })))
 export const useFormActions = () => useComponentStore((state) => state.actionsForm)
+
+// Modal Selectors (New)
+export const useModalData = () => useComponentStore(useShallow((state) => ({
+	isModalOpen: state.isModalOpen,
+	modalConfig: state.modalConfig
+})))
+export const useModalActions = () => useComponentStore((state) => state.actionsModal)
 
 // Menu Selectors
 export const useMenuData = () => useComponentStore(useShallow((state) => ({
