@@ -1,48 +1,70 @@
 import { useCollectionData, useCollectionActions } from '../stores/componentStore'
 
 const useCollection = () => {
-	const collectionData = useCollectionData()
-	const actionsCollection = useCollectionActions()
+    const { 
+        isCollectionOpen, 
+        collectionSelectedIndex, 
+        collectionSelectedGroup, 
+        selectedIds 
+    } = useCollectionData()
+    const { 
+        setIsCollectionOpen, 
+        setCollectionSelectedIndex, 
+        setCollectionItem, 
+        setCollectionSelectedGroup,
+        setSelectedIds 
+    } = useCollectionActions()
 
-	let collectionSelectedGroup = collectionData.collectionSelectedGroup
+    const handleOpenCollectionView = (item, index, isSelectable) => {
+        if(!isSelectable) return
+        setCollectionSelectedIndex(index)
+        setCollectionItem(item)
+        setIsCollectionOpen(true)
+    }
+    
+    const toggleSelect = (id) => {
+        const newSelected = selectedIds.includes(id)
+            ? selectedIds.filter(item => item !== id)
+            : [...selectedIds, id]
+        setSelectedIds(newSelected)
+    }
 
-	const handleOpenCollectionView = (item, index, isSelectable) => {
-		if(!isSelectable) {
-			return
-		}
+    const toggleSelectAll = (records) => {
+        if (selectedIds.length === records.length) {
+            setSelectedIds([])
+        } else {
+            setSelectedIds(records.map(r => r.id))
+        }
+    }
 
-		actionsCollection.setCollectionSelectedIndex(index)
-		actionsCollection.setCollectionItem(item)
-		actionsCollection.setIsCollectionOpen(true)
-	}
+    const clearSelection = () => setSelectedIds([])
 
-	const handlePreviousCollectionGroup = () => {
-		if(collectionSelectedGroup == 1) {
-			return
-		}
 
-		actionsCollection.setCollectionSelectedGroup(collectionSelectedGroup - 1)
-		actionsCollection.setCollectionSelectedIndex(0)
-	}
+    const handlePreviousCollectionGroup = () => {
+        if(collectionSelectedGroup === 1) return
+        setCollectionSelectedGroup(collectionSelectedGroup - 1)
+        setCollectionSelectedIndex(0)
+    }
 
-	const handleNextCollectionGroup = (collection) => {
-		const nextCollectionGroupLength = Object.keys(collection[collectionSelectedGroup + 1]).length
-		if(nextCollectionGroupLength === 0) {
-			return
-		}
+    const handleNextCollectionGroup = (collection) => {
+        const nextCollectionGroupLength = Object.keys(collection[collectionSelectedGroup + 1]).length
+        if(nextCollectionGroupLength === 0) return
+        setCollectionSelectedGroup(collectionSelectedGroup + 1)
+        setCollectionSelectedIndex(0)
+    }
 
-		actionsCollection.setCollectionSelectedGroup(collectionSelectedGroup + 1)
-		actionsCollection.setCollectionSelectedIndex(0)
-	}
-
-	return {
-		handleOpenCollectionView,
-		handlePreviousCollectionGroup,
-		handleNextCollectionGroup,
-		isCollectionOpen: collectionData.isCollectionOpen,
-		collectionSelectedIndex: collectionData.collectionSelectedIndex,
-		collectionSelectedGroup: collectionData.collectionSelectedGroup
-	}
+    return {
+        handleOpenCollectionView,
+        handlePreviousCollectionGroup,
+        handleNextCollectionGroup,
+        toggleSelect,
+        toggleSelectAll,
+        clearSelection,
+        isCollectionOpen,
+        collectionSelectedIndex,
+        collectionSelectedGroup,
+        selectedIds
+    }
 }
 
 export default useCollection
