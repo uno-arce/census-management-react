@@ -6,6 +6,7 @@ const useCensusStore = create(
     persist(
         (set) => ({
             records: [],
+            isLoading: false,
             totalRecords: 0,
             rowsPerPage: 10,
             currentPage: 1,
@@ -16,12 +17,13 @@ const useCensusStore = create(
 
             actions: {
                 setRecords: (records) => set({ records }),
+                setIsLoading: (loading) => set({ isLoading: loading }),
                 setTotalRecords: (total) => set({ totalRecords: total }),
                 setCurrentPage: (page) => set({ currentPage: page }),
                 setRowsPerPage: (rows) => set({ rowsPerPage: rows }),
                 setSearchQuery: (query) => set({ searchQuery: query }),
                 setSearchColumn: (column) => set({ searchColumn: column }), 
-                setSort: (column, order) => set({ sortColumn: column, sortOrder: order }),
+                setSort: (column, order) => set({ sortColumn: column, sortOrder: order, currentPage: 1 }),
                 resetCensusState: () => set({ 
                     records: [], 
                     currentPage: 1, 
@@ -48,6 +50,7 @@ const useCensusStore = create(
 
 export const useCensusData = () => useCensusStore(useShallow((state) => ({
     records: state.records,
+    isLoading: state.isLoading,
     totalRecords: state.totalRecords,
     rowsPerPage: state.rowsPerPage,
     currentPage: state.currentPage,
