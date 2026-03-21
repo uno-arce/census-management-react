@@ -17,6 +17,7 @@ const useCensus = () => {
     }, [actions])
 
     const fetchRecords = useCallback(async () => {
+        actions.setIsLoading(true)
         const params = {
             rows: data.rowsPerPage,
             group: data.currentPage,
@@ -26,9 +27,13 @@ const useCensus = () => {
             search: data.searchQuery
         }
 
-        const response = await censusRecord.getRecords(params)
-        if (response?.status === 200) {
-            actions.setRecords(response.data)
+        try {
+            const response = await censusRecord.getRecords(params)
+            if (response?.status === 200) {
+                actions.setRecords(response.data)
+            }
+        } finally {
+            actions.setIsLoading(false)
         }
     }, [
         data.rowsPerPage, data.currentPage, data.sortColumn, 
@@ -68,6 +73,32 @@ const useCensus = () => {
         }
     }
 
+    const tableHeaders = [
+        { label: 'ID', value: 'id' },
+        { label: 'Last Name', value: 'lastName' },
+        { label: 'First Name', value: 'firstName' },
+        { label: 'Block / Lot / Street', value: 'blkLotStr' },
+        { label: 'Subd. / Zone / Purok', value: 'sudbZnPrk' },
+        { label: 'Place of Birth', value: 'birthPlace' },
+        { label: 'Date of Birth', value: 'birthDate' },
+        { label: 'Sex', value: 'sex' },
+        { label: 'Civil Status', value: 'civilStatus' },
+        { label: 'Citizenship', value: 'citizenship' },
+        { label: 'Occupation', value: 'occupation' },
+    ]
+
+    const handleSort = (columnValue) => {
+        if (data.sortColumn === columnValue && data.sortOrder === 'desc') {
+            actions.setSort('updatedAt', 'desc')
+        } 
+        else if (data.sortColumn === columnValue && data.sortOrder === 'asc') {
+            actions.setSort(columnValue, 'desc')
+        } 
+        else {
+            actions.setSort(columnValue, 'asc')
+        }
+    }
+
     useEffect(() => {
         if (data.totalRecords === 0) {
             fetchTotalRecords()
@@ -90,6 +121,8 @@ const useCensus = () => {
         ...data,
         handleUpdate,
         handleDelete,
+        tableHeaders,
+        handleSort,
         refresh: fetchRecords
     }
 }
