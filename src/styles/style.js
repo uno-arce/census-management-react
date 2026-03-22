@@ -1,4 +1,3 @@
-
 // Buttons
 export const buttonStyle = (isDisabled) => {
 	const enabled = 'cursor-pointer'
@@ -54,4 +53,23 @@ export const modalStyle = (variant, isOpen) => {
 		iconCircle,
 		cancelButton
 	}
+}
+
+// History
+export const historyStyle = (action) => {
+    const header = 'sticky top-0 bg-component-surface border-b border-base-light/20 z-10'
+    const badgeBase = 'px-2 py-1 rounded-md text-[10px] font-bold uppercase'
+    
+    const variants = {
+        created: 'text-green-500 bg-green-500/10',
+        updated: 'text-amber-500 bg-amber-500/10',
+        deleted: 'text-red-500 bg-red-500/10'
+    }
+
+    const actionBadge = `${badgeBase} ${variants[action?.toLowerCase()] || 'text-base-light bg-base-light/10'}`
+
+    return {
+        header,
+        actionBadge
+    }
 }
