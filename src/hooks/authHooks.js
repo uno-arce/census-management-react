@@ -1,12 +1,11 @@
 import { useEffect } from 'react'
-import { useNavigate, useLocation } from 'react-router'
+import { useNavigate } from 'react-router'
 import { useUserAuthData, useUserAuthActions } from '../stores/userAuthStore'
 import { useAlertData, useFormActions, useAlertActions } from '../stores/componentStore'
 import userAuth from '../services/userAuth'
 
 const useAuth = () => {
 	const navigate = useNavigate()
-	const location = useLocation()
 	const userAuthData = useUserAuthData()
 	const alertData = useAlertData()
 	const actionsUserAuth = useUserAuthActions()
@@ -84,6 +83,7 @@ const useAuth = () => {
     }
 
 	return {
+		...userAuthData,
 		loginInputs,
 		login,
 		logout,

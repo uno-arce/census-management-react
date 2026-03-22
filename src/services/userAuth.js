@@ -20,6 +20,16 @@ const userAuth = {
 		.catch(error => {
 			return error.response.data.error
 		})
+	},
+
+	getHistory: (params) => {
+		return instance.get('users/get-history', { params })
+		.then(response => {
+			return response
+		})
+		.catch(error => {
+			return error.response.data.error
+		})
 	}
 }
 
