@@ -1,4 +1,5 @@
 import React from 'react'
+import { NavLink } from 'react-router-dom';
 import Search from '../components/search'
 import Collection from '../components/collection'
 import Button from '../components/button'
@@ -213,13 +214,13 @@ export default function Dashboard() {
                             {trashIcon}
                         </Button>
                     ) : (
-                        <Button 
-                            name="Add a Resident" 
-                            variant="button-primary flex items-center gap-2 px-8 py-4"
-                            call={() => {/* logic to open add resident form */}}
+                        <NavLink 
+                            to="/add-record" 
+                            className="button-primary flex items-center gap-2 px-8 py-4 no-underline"
                         >
+                            <p>Add a Resident</p>
                             {addIcon}
-                        </Button>
+                        </NavLink>
                     )}
                 </div>
             </main>
