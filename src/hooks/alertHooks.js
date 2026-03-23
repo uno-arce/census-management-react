@@ -12,7 +12,7 @@ const useAlert = () => {
 			timer = setTimeout(() => {
 				actionsAlert.setIsAlertOpen(false)
 				actionsAlert.setAlertStatus(null)
-			}, 2500)
+			}, 3500)
 		}
 
 		return () => {

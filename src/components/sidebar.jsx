@@ -1,4 +1,5 @@
 import React from 'react'
+import { NavLink } from 'react-router-dom'
 import { useSidebarData, useSidebarActions } from '../stores/componentStore'
 import useAuth from '../hooks/authHooks'
 import ToggleTheme from './ToggleTheme'
@@ -34,11 +35,15 @@ export default function Sidebar() {
 
                 <div className='flex flex-col gap-4 mt-4'>
                     <span className='text-xs font-bold uppercase tracking-widest text-base-light'>Account Security</span>
-                    <Button 
-                        name='Change Password'
-                        variant='button-accent w-full justify-start'
-                        call={() => console.log('Navigate to Change Password')}
-                    />
+                    <NavLink 
+                        to="/change-password" 
+                        onClick={() => setIsSidebarOpen(false)}
+                        className={({ isActive }) => 
+                            `button-accent w-full justify-start flex items-center px-4 py-2 ${isActive ? 'opacity-100 ring-2 ring-accent/50' : 'opacity-80'}`
+                        }
+                    >
+                        Change Password
+                    </NavLink>
                 </div>
 
                 <div className='mt-auto pt-8 border-t border-base-light/10'>
