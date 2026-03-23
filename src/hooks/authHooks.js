@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router'
 import { useUserAuthData, useUserAuthActions } from '../stores/userAuthStore'
 import { useAlertData, useFormActions, useAlertActions } from '../stores/componentStore'
 import userAuth from '../services/userAuth'
+import useForm from './formHooks'
 
 const useAuth = () => {
 	const navigate = useNavigate()
@@ -11,6 +12,7 @@ const useAuth = () => {
 	const actionsUserAuth = useUserAuthActions()
 	const actionsForm = useFormActions()
 	const actionsAlert = useAlertActions()
+	const { validateTextLength, validatePasswordComplexity } = useForm()
 
 	useEffect(() => {
        if(userAuthData.isUserAuthLoading) {
@@ -24,6 +26,13 @@ const useAuth = () => {
        	
        	actionsUserAuth.setIsUserAuthLoading(false)
        }
+    }, [])
+
+    useEffect(() => {
+        return () => {
+            actionsUserAuth.resetUserAuthState()
+            actionsAlert.setIsAlertOpen(false)
+        }
     }, [])
 
 	const loginInputs = [
@@ -75,6 +84,49 @@ const useAuth = () => {
 		}
 	}
 
+	const changePasswordInputs = [
+        {
+            name: 'Current Password',
+            value: userAuthData.oldPassword,
+            type: 'password',
+            updateState: (val) => actionsUserAuth.setOldPassword(val),
+        },
+        {
+            name: 'New Password',
+            value: userAuthData.newPassword,
+            type: 'password',
+            updateState: (val) => actionsUserAuth.setNewPassword(val),
+            validateState: (val) => {
+                const isLengthCorrect = validateTextLength(val, 7, 30) 
+                const isComplexityCorrect = validatePasswordComplexity(val)
+
+                actionsUserAuth.setIsNewPasswordLengthCorrect(isLengthCorrect)
+                actionsUserAuth.setIsNewPasswordComplexityCorrect(isComplexityCorrect)
+            }
+        }
+    ]
+
+    const changePassword = async () => {
+        actionsAlert.setIsAlertOpen(true)
+        actionsAlert.setAlertStatus('loading')
+        actionsAlert.setAlertMessage('Updating password...')
+
+        const response = await userAuth.changePassword(
+            userAuthData.oldPassword, 
+            userAuthData.newPassword
+        )
+
+        if (response?.status === 200) {
+            actionsAlert.setAlertStatus('success')
+            actionsAlert.setAlertMessage('Password Updated Successfully')
+            actionsUserAuth.setOldPassword('')
+            actionsUserAuth.setNewPassword('')
+        } else {
+            actionsAlert.setAlertStatus('failed')
+            actionsAlert.setAlertMessage(response?.data?.error || 'Update failed')
+        }
+    }
+
 	const logout = () => {
         localStorage.removeItem('token')
         localStorage.removeItem('census-storage')
@@ -85,8 +137,10 @@ const useAuth = () => {
 	return {
 		...userAuthData,
 		loginInputs,
+		changePasswordInputs,
 		login,
 		logout,
+		changePassword,
 		handleUserTester,
 		isFormDisabled: userAuthData.isFormDisabled,
 		isLoginButtonDisabled: userAuthData.isLoginButtonDisabled,
