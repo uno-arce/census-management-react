@@ -14,6 +14,11 @@ const useCensusStore = create(
             searchColumn: 'lastName',
             sortColumn: 'updatedAt',
             sortOrder: 'desc',
+            newRecord: {
+                firstName: '', lastName: '', middleName: '', suffix: '',
+                blkLotStr: '', sudbZnPrk: '', birthPlace: '', birthDate: '',
+                sex: '', civilStatus: '', citizenship: 'Filipino', occupation: ''
+            },
 
             actions: {
                 setRecords: (records) => set({ records }),
@@ -24,6 +29,16 @@ const useCensusStore = create(
                 setSearchQuery: (query) => set({ searchQuery: query }),
                 setSearchColumn: (column) => set({ searchColumn: column }), 
                 setSort: (column, order) => set({ sortColumn: column, sortOrder: order, currentPage: 1 }),
+                setNewRecord: (field, value) => set((state) => ({
+                    newRecord: { ...state.newRecord, [field]: value }
+                })),
+                resetNewRecord: () => set({ 
+                    newRecord: {
+                        firstName: '', lastName: '', middleName: '', suffix: '',
+                        blkLotStr: '', sudbZnPrk: '', birthPlace: '', birthDate: '',
+                        sex: '', civilStatus: '', citizenship: 'Filipino', occupation: ''
+                    }
+                }),
                 resetCensusState: () => set({ 
                     records: [], 
                     currentPage: 1, 
@@ -42,7 +57,8 @@ const useCensusStore = create(
                 searchColumn: state.searchColumn,
                 sortColumn: state.sortColumn,
                 sortOrder: state.sortOrder,
-                rowsPerPage: state.rowsPerPage
+                rowsPerPage: state.rowsPerPage,
+                newRecord: state.newRecord
             }),
         }
     )
@@ -57,7 +73,8 @@ export const useCensusData = () => useCensusStore(useShallow((state) => ({
     searchQuery: state.searchQuery,
     searchColumn: state.searchColumn,
     sortColumn: state.sortColumn,
-    sortOrder: state.sortOrder
+    sortOrder: state.sortOrder,
+    newRecord: state.newRecord
 })))
 
 export const useCensusActions = () => useCensusStore((state) => state.actions)
