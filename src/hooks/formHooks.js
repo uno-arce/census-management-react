@@ -6,12 +6,14 @@ const useForm = () => {
 	const actionsForm = useFormActions()
 
 	const validateTextLength = (input, min, max) => {
-		if(input.length >= min && input.length <= max) {
-			return true
-		}
+        return input.length >= min && input.length <= max
+    }
 
-		return false
-	}
+    const validatePasswordComplexity = (input) => {
+        const hasNumber = /\d/.test(input)
+        const hasSymbol = /[^\w\s]/.test(input)
+        return hasNumber && hasSymbol
+    }
 
 	const handleFormSubmit = async (event, call) => {
 		event.preventDefault()
@@ -21,6 +23,7 @@ const useForm = () => {
 
 	return {
 		validateTextLength,
+		validatePasswordComplexity,
 		handleFormSubmit,
 		currentFormStep: formData.currentFormStep
 	}
