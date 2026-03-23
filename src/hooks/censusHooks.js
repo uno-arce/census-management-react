@@ -99,9 +99,65 @@ const useCensus = () => {
         }
     }
 
+    const handleCreateRecords = async () => {
+    actionsAlert.setIsAlertOpen(true)
+    actionsAlert.setAlertStatus('loading')
+    actionsAlert.setAlertMessage('Adding resident...')
+
+    const { firstName, lastName, middleName, suffix, ...restOfRecord } = data.newRecord
+
+    const fullNameParts = [middleName, lastName, suffix].filter(Boolean)
+    const formattedLastName = fullNameParts.join(' ')
+
+    const recordToSubmit = {
+        firstName,
+        lastName: formattedLastName,
+        ...restOfRecord
+    }
+
+    const response = await censusRecord.createRecords([recordToSubmit])
+
+    if (response?.status === 200) {
+        actionsAlert.setAlertStatus('success')
+        actionsAlert.setAlertMessage(response.data.message)
+        actions.resetNewRecord()
+        fetchTotalRecords()
+    } else {
+        actionsAlert.setAlertStatus('failed')
+        actionsAlert.setAlertMessage(response?.data?.error || 'Failed to add record')
+    }
+}
+
+    const isStep1Complete = data.newRecord.firstName && data.newRecord.lastName
+    const isStep2Complete = data.newRecord.blkLotStr && data.newRecord.birthPlace && data.newRecord.birthDate
+    const isStep3Complete = data.newRecord.sex && data.newRecord.civilStatus && data.newRecord.citizenship
+
+    const steps = [
+        { id: 1, label: 'Resident Name', isComplete: isStep1Complete },
+        { id: 2, label: 'Resident Address', isComplete: isStep2Complete },
+        { id: 3, label: 'Resident Status', isComplete: isStep3Complete }
+    ]
+    const completedSteps = steps.filter(s => s.isComplete).length
+
+    const residentInputs = [
+        { name: 'First Name', value: data.newRecord.firstName, updateState: (val) => actions.setNewRecord('firstName', val) },
+        { name: 'Last Name', value: data.newRecord.lastName, updateState: (val) => actions.setNewRecord('lastName', val) },
+        { name: 'Middle Name', value: data.newRecord.middleName, updateState: (val) => actions.setNewRecord('middleName', val) },
+        { name: 'Suffix', value: data.newRecord.suffix, updateState: (val) => actions.setNewRecord('suffix', val), placeholder: 'Jr. / Sr. / III' },
+        { name: 'Address', value: data.newRecord.blkLotStr, updateState: (val) => actions.setNewRecord('blkLotStr', val), placeholder: '123 Main St.', fullWidth: true },
+        { name: 'Address 2', value: data.newRecord.sudbZnPrk, updateState: (val) => actions.setNewRecord('sudbZnPrk', val), placeholder: 'Subdivision / Zone / Sitio / Purok', fullWidth: true },
+        { name: 'Place of Birth', value: data.newRecord.birthPlace, updateState: (val) => actions.setNewRecord('birthPlace', val), placeholder: 'Province, City', fullWidth: true },
+        { name: 'Date of Birth', value: data.newRecord.birthDate, type: 'date', updateState: (val) => actions.setNewRecord('birthDate', val) },
+        { name: 'Sex', value: data.newRecord.sex, type: 'select', options: ['Male', 'Female'], updateState: (val) => actions.setNewRecord('sex', val) },
+        { name: 'Civil Status', value: data.newRecord.civilStatus, type: 'select', options: ['Single', 'Married', 'Widowed', 'Separated'], updateState: (val) => actions.setNewRecord('civilStatus', val) },
+        { name: 'Citizenship', value: data.newRecord.citizenship, updateState: (val) => actions.setNewRecord('citizenship', val) },
+        { name: 'Occupation', value: data.newRecord.occupation, updateState: (val) => actions.setNewRecord('occupation', val), fullWidth: true },
+    ]
+
     useEffect(() => {
         if (data.totalRecords === 0) {
             fetchTotalRecords()
+            actions.resetNewRecord()
         }
     }, [])
 
@@ -121,9 +177,15 @@ const useCensus = () => {
         ...data,
         handleUpdate,
         handleDelete,
+        handleCreateRecords,
         tableHeaders,
         handleSort,
-        refresh: fetchRecords
+        steps,
+        completedSteps,
+        residentInputs,
+        setNewRecord: actions.setNewRecord,
+        resetNewRecord: actions.resetNewRecord,
+        refresh: fetchRecords,
     }
 }
 
