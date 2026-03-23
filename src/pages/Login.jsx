@@ -31,7 +31,7 @@ export default function Login() {
                     inputs={loginInputs}
                     call={login}
                     isDisabled={isFormDisabled}
-                    structure='flex flex-col gap-1 overflow-hidden 0 bg-component-surface'
+                    structure='flex flex-col gap-4 overflow-hidden 0'
                 >
                     <Alert />
                 </Form>
