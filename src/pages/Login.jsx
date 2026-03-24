@@ -15,7 +15,7 @@ export default function Login() {
 		<div className='flex flex-col items-center justify-center min-h-dvh bg-background p-4'>
             <div className='flex flex-col items-center mb-16'>
                 <img 
-			        src="/src/assets/city-logo.png" 
+			        src="/city-logo.png" 
 			        alt="City Logo" 
 			        className="w-28 h-28 mb-4 object-contain"
 			    />
