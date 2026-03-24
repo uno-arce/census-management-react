@@ -1,12 +1,15 @@
 import React from 'react'
+import { NavLink } from 'react-router-dom'
 import Button from './button'
 import Modal from './modal'
 import useResidentSidebar from '../hooks/sidebarHooks'
 import useModal from '../hooks/modalHooks'
+import useCensus from '../hooks/censusHooks'
 
 export default function ResidentSidebar({ isOpen, data, onUpdate, onDelete }) {
     const { closeSidebar } = useResidentSidebar()
     const { openModal } = useModal()
+    const { handlePrepareUpdate } = useCensus(false)
     
     if (!data) return null
 
@@ -56,11 +59,16 @@ export default function ResidentSidebar({ isOpen, data, onUpdate, onDelete }) {
                     </div>
 
                     <div className="pt-8 border-t border-base-light/20 flex flex-col gap-3">
-                        <Button 
-                            name="Update Resident" 
-                            variant="button-primary w-full py-4" 
-                            onClick={() => onUpdate(data.id, data)}
-                        />
+                        <NavLink 
+                            to={`/update-record/${data.id}`}
+                            onClick={() => {
+                                handlePrepareUpdate(data)
+                                closeSidebar()      
+                            }}
+                            className="button-primary text-center w-full py-4"
+                        >
+                            Update Resident
+                        </NavLink>
                         <Button 
                         	name='Delete Record'
                             variant="w-full py-3 text-red-400 border border-red-500/10 hover:bg-red-500/5 rounded-sm text-sm font-medium transition-all"
