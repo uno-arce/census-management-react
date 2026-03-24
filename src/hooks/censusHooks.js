@@ -3,7 +3,7 @@ import { useCensusData, useCensusActions } from '../stores/censusStore'
 import { useAlertActions } from '../stores/componentStore'
 import censusRecord from '../services/censusRecord'
 
-const useCensus = () => {
+const useCensus = (enabled = true) => {
     const data = useCensusData()
     const actions = useCensusActions()
     const actionsAlert = useAlertActions()
@@ -40,6 +40,27 @@ const useCensus = () => {
         data.sortOrder, data.searchColumn, data.searchQuery, actions
     ])
 
+    useEffect(() => {
+        if (data.totalRecords === 0) {
+            fetchTotalRecords()
+            actions.resetNewRecord()
+        }
+    }, [enabled])
+
+    useEffect(() => {
+        if (!enabled) return
+            
+        if (debounceTimer.current) clearTimeout(debounceTimer.current)
+            const delay = data.searchQuery ? 500 : 0
+
+            debounceTimer.current = setTimeout(() => {
+            fetchRecords()
+        }, delay)
+
+        return () => clearTimeout(debounceTimer.current)
+    }, [data.currentPage, data.searchQuery, data.sortColumn, data.sortOrder, fetchRecords])
+
+
     const handleUpdate = async (id, updatedData) => {
         actionsAlert.setIsAlertOpen(true)
         actionsAlert.setAlertStatus('loading')
@@ -51,12 +72,15 @@ const useCensus = () => {
             actionsAlert.setAlertStatus('success')
             actionsAlert.setAlertMessage(response.data.message)
             fetchRecords()
-            return response.data
         } else {
             actionsAlert.setAlertStatus('failed')
             actionsAlert.setAlertMessage(response?.data?.error || 'Update failed')
             return null
         }
+    }
+
+    const handlePrepareUpdate = (record) => {
+        actions.setEditRecord(record)
     }
 
     const handleDelete = async (ids) => {
@@ -154,28 +178,27 @@ const useCensus = () => {
         { name: 'Occupation', value: data.newRecord.occupation, updateState: (val) => actions.setNewRecord('occupation', val), fullWidth: true },
     ]
 
-    useEffect(() => {
-        if (data.totalRecords === 0) {
-            fetchTotalRecords()
-            actions.resetNewRecord()
-        }
-    }, [])
+    const updateInputs = [
 
-    useEffect(() => {
-            if (debounceTimer.current) clearTimeout(debounceTimer.current)
+        { name: 'First Name', value: data.editRecord.firstName, updateState: (val) => actions.updateEditRecord('firstName', val) },
+        { name: 'Last Name', value: data.editRecord.lastName, updateState: (val) => actions.updateEditRecord('lastName', val) },
+        { name: 'Middle Name', value: data.editRecord.middleName, updateState: (val) => actions.updateEditRecord('middleName', val) },
+        { name: 'Suffix', value: data.editRecord.suffix, updateState: (val) => actions.updateEditRecord('suffix', val) },
+        { name: 'Address', value: data.editRecord.blkLotStr, updateState: (val) => actions.updateEditRecord('blkLotStr', val), fullWidth: true },
+        { name: 'Address 2', value: data.editRecord.sudbZnPrk, updateState: (val) => actions.updateEditRecord('sudbZnPrk', val), fullWidth: true },
+        { name: 'Place of Birth', value: data.editRecord.birthPlace, updateState: (val) => actions.updateEditRecord('birthPlace', val), fullWidth: true },
+        { name: 'Date of Birth', value: data.editRecord.birthDate, type: 'date', updateState: (val) => actions.updateEditRecord('birthDate', val) },
+        { name: 'Sex', value: data.editRecord.sex, type: 'select', options: ['Male', 'Female'], updateState: (val) => actions.updateEditRecord('sex', val) },
+        { name: 'Civil Status', value: data.editRecord.civilStatus, type: 'select', options: ['Single', 'Married', 'Widowed', 'Separated'], updateState: (val) => actions.updateEditRecord('civilStatus', val) },
+        { name: 'Citizenship', value: data.editRecord.citizenship, updateState: (val) => actions.updateEditRecord('citizenship', val) },
+        { name: 'Occupation', value: data.editRecord.occupation, updateState: (val) => actions.updateEditRecord('occupation', val), fullWidth: true },
+    ]
 
-            const delay = data.searchQuery ? 500 : 0
-
-            debounceTimer.current = setTimeout(() => {
-                fetchRecords()
-            }, delay)
-
-            return () => clearTimeout(debounceTimer.current)
-        }, [data.currentPage, data.searchQuery, data.sortColumn, data.sortOrder, fetchRecords])
 
     return {
         ...data,
         handleUpdate,
+        handlePrepareUpdate,
         handleDelete,
         handleCreateRecords,
         tableHeaders,
@@ -183,6 +206,7 @@ const useCensus = () => {
         steps,
         completedSteps,
         residentInputs,
+        updateInputs,
         setNewRecord: actions.setNewRecord,
         resetNewRecord: actions.resetNewRecord,
         refresh: fetchRecords,
