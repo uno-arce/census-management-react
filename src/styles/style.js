@@ -1,7 +1,7 @@
 // Buttons
 export const buttonStyle = (isDisabled) => {
 	const enabled = 'cursor-pointer'
-	const disabled = 'cursor-default'
+	const disabled = 'cursor-default pointer-events-none'
 	return isDisabled ? `${disabled}` : `${enabled}`
 }
 

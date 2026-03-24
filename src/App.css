@@ -135,6 +135,11 @@
       @apply p-4 font-bold;
     }
 
+    th.cursor-default {
+      pointer-events: none;
+      user-select: none;
+    }
+
     td {
       @apply p-4 text-sm border-b border-base-light/5 transition-colors;
     }
@@ -220,6 +225,11 @@
     &:focus {
       outline: none;
       border: 1px solid var(--color-base);
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
     }
   }
 }
