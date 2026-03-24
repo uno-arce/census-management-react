@@ -1,7 +1,7 @@
 import React from 'react';
 import { buttonStyle } from '../styles/style'
 
-export default function Button({name, id, call, isDisabled, variant, children}) {
+export default function Button({name, id, call, isDisabled, variant, children, ...props}) {
 	const buttonClasses = buttonStyle(isDisabled)
 
 	return(
@@ -10,6 +10,7 @@ export default function Button({name, id, call, isDisabled, variant, children}) 
 			type='submit' 
 			disabled={isDisabled} 
 			onClick={call}
+			{...props}
 		>
 			{name} {children}
 		</button>
