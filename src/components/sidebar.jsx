@@ -48,8 +48,8 @@ export default function Sidebar() {
 
                 <div className='mt-auto pt-8 border-t border-base-light/10'>
                     <Button 
-                        name='Logout Session'
-                        variant='button-primary w-full bg-red-600 hover:bg-red-700'
+                        name='Sign out'
+                        variant='button-accent w-full justify-center flex items-center px-4 py-2'
                         call={logout}
                     />
                 </div>
