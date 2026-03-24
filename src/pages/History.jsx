@@ -2,6 +2,7 @@ import React from 'react'
 import Search from '../components/search'
 import Collection from '../components/collection'
 import Placeholder from '../components/Placeholder'
+import Button from '../components/Button'
 import useHistory from '../hooks/historyHooks'
 import { historyStyle } from '../styles/style'
 
@@ -72,7 +73,7 @@ export default function History() {
                                     return (
                                         <th 
                                             key={header.value} 
-                                            onClick={() => handleSort(header.value)}
+                                            onClick={() => !isLoading && handleSort(header.value)}
                                         >
                                             <div className="flex items-center gap-2">
                                                 <span className={isCurrentCol ? 'text-accent font-bold' : 'text-base-light'}>
@@ -143,23 +144,23 @@ export default function History() {
                     </div>
 
                     <div className='flex items-center gap-4'>
-                        <button 
-                            className='button-accent px-4 py-2 disabled:opacity-50' 
-                            onClick={() => setHistoryParams({ group: currentPage - 1 })} 
-                            disabled={currentPage === 1}
-                        >
-                            Previous
-                        </button>
+                        <Button
+                            name='Previous'
+                            variant='button-accent px-4 py-2'
+                            call={() => setHistoryParams({ group: currentPage - 1 })}
+                            isDisabled={currentPage === 1 || isLoading}
+                        />
+
                         <div className='text-sm text-base-light font-body'>
                             Page {currentPage} of {totalPages || 1}
                         </div>
-                        <button 
-                            className='button-accent px-4 py-2 disabled:opacity-50' 
-                            onClick={() => setHistoryParams({ group: currentPage + 1 })} 
-                            disabled={currentPage >= totalPages}
-                        >
-                            Next
-                        </button>
+
+                        <Button
+                            name='Next'
+                            variant='button-accent px-4 py-2'
+                            call={() => setHistoryParams({ group: currentPage + 1 })}
+                            isDisabled={currentPage >= totalPages || isLoading}
+                        />
                     </div>
                 </div>
             </main>

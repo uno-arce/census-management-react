@@ -99,6 +99,7 @@ export default function Dashboard() {
                                     <input 
                                         type="checkbox" 
                                         className="cursor-pointer accent-accent"
+                                        disabled={isLoading}
                                         checked={records.length > 0 && selectedIds.length === records.length}
                                         onChange={() => toggleSelectAll(records)}
                                     />
@@ -110,7 +111,7 @@ export default function Dashboard() {
                                         <th 
                                             key={header.value}
                                             className="cursor-pointer select-none group"
-                                            onClick={() => handleSort(header.value)}
+                                            onClick={() => !isLoading && handleSort(header.value)}
                                         >
                                             <div className="flex items-center gap-2">
                                                 <span className={isCurrentCol ? 'text-accent font-bold' : 'text-base-light'}>
@@ -190,9 +191,23 @@ export default function Dashboard() {
                     </div>
 
                     <div className='flex items-center gap-4'>
-                        <button className='button-accent px-4 py-2 disabled:opacity-50' onClick={() => setCurrentPage(currentPage - 1)} disabled={currentPage === 1}>Previous</button>
-                        <div className='text-sm text-base-light'>Page {currentPage} of {totalPages || 1}</div>
-                        <button className='button-accent px-4 py-2 disabled:opacity-50' onClick={() => setCurrentPage(currentPage + 1)} disabled={currentPage >= totalPages}>Next</button>
+                        <Button
+                            name='Previous'
+                            call={() => setCurrentPage(currentPage - 1)}
+                            isDisabled={currentPage === 1 || isLoading}
+                            variant='button-accent px-4 py-2'
+                        />
+
+                        <div className='text-sm text-base-light'>
+                            Page {currentPage} of {totalPages || 1}
+                        </div>
+
+                        <Button
+                            name='Next'
+                            call={() => setCurrentPage(currentPage + 1)}
+                            isDisabled={currentPage >= totalPages || isLoading}
+                            variant='button-accent px-4 py-2'
+                        />
                     </div>
 
                     {selectedIds.length > 0 ? (

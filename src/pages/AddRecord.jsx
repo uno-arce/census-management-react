@@ -5,7 +5,7 @@ import Alert from '../components/alert'
 import Button from '../components/button'
 
 export default function AddRecord() {
-    const { newRecord, setNewRecord, handleCreateRecords, residentInputs, completedSteps, steps } = useCensus()
+    const { newRecord, setNewRecord, handleCreateRecords, residentInputs, completedSteps, steps } = useCensus(false)
 
     return (
         <div className='overflow-hidden min-h-screen bg-background px-16 pb-8 font-body'>
