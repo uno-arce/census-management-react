@@ -36,21 +36,11 @@ export default function Login() {
                     <Alert />
                 </Form>
 
-                <div className='flex items-center gap-2 my-4'>
-                    <input 
-                        type='checkbox' 
-                        id='remember'
-                        className='h-4 w-4 rounded border-base-light/30 accent-button'
-                    />
-                    <label htmlFor='remember' className='text-base-light font-normal'>Remember me</label>
-                </div>
-
                 <Button 
                     name='Sign In' 
                     form='loginForm'
-                    call={login}
                     isDisabled={isLoginButtonDisabled}
-                    variant='button-primary w-full py-3 mb-4'
+                    variant='button-primary w-full py-3 my-4'
                 />
 
                 <Notice message={
