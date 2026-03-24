@@ -2,7 +2,7 @@ import React from 'react'
 import Search from '../components/search'
 import Collection from '../components/collection'
 import Placeholder from '../components/Placeholder'
-import Button from '../components/Button'
+import Button from '../components/button'
 import useHistory from '../hooks/historyHooks'
 import { historyStyle } from '../styles/style'
 
