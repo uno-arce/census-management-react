@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router'
 import { useUserAuthData, useUserAuthActions } from '../stores/userAuthStore'
-import { useAlertData, useFormActions, useAlertActions } from '../stores/componentStore'
+import { useAlertData, useFormActions, useAlertActions, useSidebarActions } from '../stores/componentStore'
 import userAuth from '../services/userAuth'
 import useForm from './formHooks'
 
@@ -12,6 +12,7 @@ const useAuth = () => {
 	const actionsUserAuth = useUserAuthActions()
 	const actionsForm = useFormActions()
 	const actionsAlert = useAlertActions()
+    const actionsSidebar = useSidebarActions()
 	const { validateTextLength, validatePasswordComplexity } = useForm()
 
 	useEffect(() => {
@@ -131,6 +132,7 @@ const useAuth = () => {
         localStorage.removeItem('token')
         localStorage.removeItem('census-storage')
         actionsUserAuth.setIsAuthenticated(false)
+        actionsSidebar.setIsSidebarOpen(false)
         navigate('/login', { replace: true })
     }
 
