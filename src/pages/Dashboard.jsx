@@ -4,9 +4,10 @@ import Search from '../components/search'
 import Collection from '../components/collection'
 import Button from '../components/button'
 import Alert from '../components/alert'
-import ResidentSidebar from '../components/ResidentSidebar' 
+import ResidentSidebar from '../components/ResidentSidebar'
 import Modal from '../components/modal'
 import Placeholder from '../components/Placeholder'
+import Pagination from '../components/Pagination'
 import useCensus from '../hooks/censusHooks'
 import useCollection from '../hooks/collectionHooks'
 import useModal from '../hooks/modalHooks'
@@ -44,16 +45,17 @@ export default function Dashboard() {
     const trashIcon = <svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 -960 960 960" width="18px" fill="currentColor"><path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z"/></svg>
 
     return (
-        <div className='flex relative overflow-hidden min-h-screen bg-background text-base font-body'>
-            <main className={`px-16 flex flex-col gap-2 flex-1 transition-all duration-300 ${isCollectionOpen ? 'mr-[400px]' : ''}`}>
-                <div className='flex justify-between items-end border-t border-base-light/20 pt-8'>
+        <div className='flex relative overflow-x-hidden min-h-screen bg-background text-base font-body'>
+            <main className={`max-lg:px-4 px-16 flex flex-col gap-2 flex-1 transition-all duration-300 w-full min-w-0 ${isCollectionOpen ? 'lg:mr-[400px]' : ''}`}>
+                
+                <div className='max-md:flex-col max-md:gap-4 max-md:items-stretch flex justify-between items-end border-t border-base-light/20 pt-8'>
                     <div>
                         <h2 className='text-xl text-base font-medium'>Barangay Residents</h2>
                         <p className='text-base-light text-sm'>List of residents in Barangay Sampaloc IV</p>
                     </div>
 
-                    <div className='flex items-center gap-2'>
-                        <div className='flex items-center gap-2 bg-component-surface border border-base-light/20 rounded-md pl-3 pr-1 py-1'>
+                    <div className='flex max-sm:flex-col items-center gap-2 max-sm:w-full'>
+                        <div className='flex items-center gap-2 bg-component-surface border border-base-light/20 rounded-md pl-3 pr-1 py-1 max-sm:w-full max-sm:justify-between'>
                             <div className='flex items-center gap-2 text-base-light border-r border-base-light/20 pr-2 mr-1'>
                                 {filterIcon}
                                 <select 
@@ -73,7 +75,7 @@ export default function Dashboard() {
                             />
                         </div>
 
-                        <div className='flex items-center gap-2 bg-component-surface border border-base-light/20 rounded-md px-3 h-[42px] text-sm'>
+                        <div className='flex items-center gap-2 bg-component-surface border border-base-light/20 rounded-md px-3 h-[42px] text-sm max-sm:w-full max-sm:justify-between'>
                             <label className='text-base-light font-normal whitespace-nowrap'>Rows:</label>
                             <select 
                                 value={rowsPerPage} 
@@ -91,11 +93,11 @@ export default function Dashboard() {
                     </div>
                 </div>
 
-                <div className='mt-4 h-[582px] overflow-auto rounded-sm border border-base-light/20 shadow-sm bg-component-surface'>
-                    <table className="w-full">
+                <div className='mt-4 max-h-[582px] w-full min-w-0 overflow-x-auto rounded-sm border border-base-light/20 shadow-sm bg-component-surface'>
+                    <table className="w-full table-auto">
                         <thead>
                             <tr>
-                                <th>
+                                <th className="hidden sm:table-cell">
                                     <input 
                                         type="checkbox" 
                                         className="cursor-pointer accent-accent"
@@ -106,11 +108,12 @@ export default function Dashboard() {
                                 </th>
                                 {tableHeaders.map((header) => {
                                     const isCurrentCol = sortColumn === header.value;
+                                    const isMobileVisible = ['lastName', 'firstName', 'blkLotStr', 'sudbZnPrk'].includes(header.value);
                                     
                                     return (
                                         <th 
                                             key={header.value}
-                                            className="cursor-pointer select-none group"
+                                            className={`cursor-pointer select-none group ${isMobileVisible ? '' : 'hidden sm:table-cell'}`}
                                             onClick={() => !isLoading && handleSort(header.value)}
                                         >
                                             <div className="flex items-center gap-2">
@@ -155,7 +158,7 @@ export default function Dashboard() {
                                     structure='contents'
                                     renderItem={(item) => (
                                         <>
-                                            <td onClick={(e) => e.stopPropagation()}>
+                                            <td onClick={(e) => e.stopPropagation()} className="hidden sm:table-cell">
                                                 <input 
                                                     type="checkbox" 
                                                     className="cursor-pointer accent-accent"
@@ -163,17 +166,17 @@ export default function Dashboard() {
                                                     onChange={() => toggleSelect(item.id)}
                                                 />
                                             </td>
-                                            <td>{item.id}</td>
-                                            <td>{item.lastName}</td>
-                                            <td>{item.firstName}</td>
-                                            <td>{item.blkLotStr}</td>
-                                            <td>{item.sudbZnPrk}</td>
-                                            <td>{item.birthPlace}</td>
-                                            <td>{new Date(item.birthDate).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</td>
-                                            <td>{item.sex}</td>
-                                            <td>{item.civilStatus}</td>
-                                            <td>{item.citizenship}</td>
-                                            <td>{item.occupation}</td>
+                                            <td className="hidden sm:table-cell">{item.id}</td>
+                                            <td className="whitespace-nowrap font-medium">{item.lastName}</td>
+                                            <td className="whitespace-nowrap">{item.firstName}</td>
+                                            <td className="max-w-[150px] truncate sm:whitespace-normal">{item.blkLotStr}</td>
+                                            <td className="max-w-[120px] truncate sm:whitespace-normal">{item.sudbZnPrk}</td>
+                                            <td className="hidden sm:table-cell">{item.birthPlace}</td>
+                                            <td className="hidden sm:table-cell whitespace-nowrap">{new Date(item.birthDate).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</td>
+                                            <td className="hidden sm:table-cell">{item.sex}</td>
+                                            <td className="hidden sm:table-cell">{item.civilStatus}</td>
+                                            <td className="hidden sm:table-cell">{item.citizenship}</td>
+                                            <td className="hidden sm:table-cell">{item.occupation}</td>
                                         </>
                                     )}
                                 />
@@ -182,61 +185,50 @@ export default function Dashboard() {
                     </table>
                 </div>
 
-                <div className='flex justify-between items-center py-8'>
-                    <div className='flex items-center gap-3'>
+                <div className='flex max-md:flex-col max-md:gap-6 justify-between items-center pt-6 pb-8 w-full'>
+                    <div className='flex items-center gap-3 max-md:justify-center'>
                         <div className='text-accent'>{groupsIcon}</div>
-                        <h2 className='text-accent text-4xl font-display font-bold'>
+                        <h2 className='text-accent text-3xl sm:text-4xl font-display font-bold'>
                             {totalRecords.toLocaleString()} Residents
                         </h2>
                     </div>
 
-                    <div className='flex items-center gap-4'>
-                        <Button
-                            name='Previous'
-                            call={() => setCurrentPage(currentPage - 1)}
-                            isDisabled={currentPage === 1 || isLoading}
-                            variant='button-accent px-4 py-2'
-                        />
+                    <Pagination 
+                        currentPage={currentPage} 
+                        totalPages={totalPages} 
+                        onPageChange={setCurrentPage} 
+                        isLoading={isLoading} 
+                    />
 
-                        <div className='text-sm text-base-light'>
-                            Page {currentPage} of {totalPages || 1}
-                        </div>
-
-                        <Button
-                            name='Next'
-                            call={() => setCurrentPage(currentPage + 1)}
-                            isDisabled={currentPage >= totalPages || isLoading}
-                            variant='button-accent px-4 py-2'
-                        />
+                    <div className='max-sm:w-full flex justify-end max-sm:justify-center'>
+                        {selectedIds.length > 0 ? (
+                            <Button 
+                                name={`Delete ${selectedIds.length}`} 
+                                variant="button-danger px-6 py-4 flex items-center gap-2 max-sm:w-full justify-center"
+                                call={() => openModal({
+                                    title: `Delete ${selectedIds.length} Residents`,
+                                    description: `Are you sure you want to delete these ${selectedIds.length} records? This action cannot be undone.`,
+                                    variant: 'danger',
+                                    confirmText: 'Delete All',
+                                    onConfirm: async () => {
+                                        await handleDelete(selectedIds)
+                                        clearSelection()
+                                        closeSidebar()
+                                    }
+                                })}
+                            >
+                                {trashIcon}
+                            </Button>
+                        ) : (
+                            <NavLink 
+                                to="/add-record" 
+                                className="button-primary flex items-center justify-center gap-2 px-8 py-4 no-underline max-sm:w-full"
+                            >
+                                <p>Add a Resident</p>
+                                {addIcon}
+                            </NavLink>
+                        )}
                     </div>
-
-                    {selectedIds.length > 0 ? (
-                        <Button 
-                            name={`Delete ${selectedIds.length} Residents`} 
-                            variant="button-danger"
-                            call={() => openModal({
-                                title: `Delete ${selectedIds.length} Residents`,
-                                description: `Are you sure you want to delete these ${selectedIds.length} records? This action cannot be undone.`,
-                                variant: 'danger',
-                                confirmText: 'Delete All',
-                                onConfirm: async () => {
-                                    await handleDelete(selectedIds)
-                                    clearSelection()
-                                    closeSidebar()
-                                }
-                            })}
-                        >
-                            {trashIcon}
-                        </Button>
-                    ) : (
-                        <NavLink 
-                            to="/add-record" 
-                            className="button-primary flex items-center gap-2 px-8 py-4 no-underline"
-                        >
-                            <p>Add a Resident</p>
-                            {addIcon}
-                        </NavLink>
-                    )}
                 </div>
             </main>
 
