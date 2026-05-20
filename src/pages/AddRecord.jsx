@@ -8,7 +8,7 @@ export default function AddRecord() {
     const { newRecord, setNewRecord, handleCreateRecords, residentInputs, completedSteps, steps } = useCensus(false)
 
     return (
-        <div className='overflow-hidden min-h-screen bg-background px-16 pb-8 font-body'>
+        <div className='max-lg:px-4 overflow-hidden min-h-screen bg-background px-16 pb-8 font-body'>
             <header className='text-center mb-12 border-t border-base-light/20 pt-8'>
                 <h1 className='text-3xl font-display font-bold'>Adding Form</h1>
                 <p className='text-base-light max-w-2xl mx-auto mt-2 text-sm'>
